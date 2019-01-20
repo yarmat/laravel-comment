@@ -1,0 +1,37 @@
+{
+    "name": "yarmat/laravel-comment",
+    "description": "Package for using comments with Vue in Laravel 5",
+    "version": "1.0",
+    "keywords": [
+        "laravel",
+        "comments"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yarmat",
+            "email": "yarmatua@gmail.com",
+            "homepage": "https://yarmat.su",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0",
+        "kalnoy/nestedset": "^4.3",
+        "jenssegers/date": "^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yarmat\\Comment\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yarmat\\Comment\\CommentServiceProvider"
+            ]
+        }
+    }
+}
