@@ -20,7 +20,8 @@
     "require": {
         "php": ">=7.0",
         "kalnoy/nestedset": "^4.3",
-        "jenssegers/date": "^3.4"
+        "jenssegers/date": "^3.4",
+        "genealabs/laravel-model-caching": "^0.3.6"
     },
     "autoload": {
         "psr-4": {
@@ -31,7 +32,10 @@
         "laravel": {
             "providers": [
                 "Yarmat\\Comment\\CommentServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Comment": "Yarmat\\Comment\\Facades\\Comment"
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Yarmat\Comment;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class CommentServiceProvider extends ServiceProvider
@@ -21,6 +22,11 @@ class CommentServiceProvider extends ServiceProvider
             __DIR__.'/../database/migrations/create_comments_table.php' => $this->getMigrationFileName(),
         ], 'migrations');
 
+        $this->publishes([
+            __DIR__.'/../resources/lang/en/comment.php' => resource_path('lang/en/comment.php'),
+            __DIR__.'/../resources/lang/ru/comment.php' => resource_path('lang/ru/comment.php'),
+        ], 'langs');
+
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
     }
 
@@ -31,7 +37,12 @@ class CommentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(CommentServcice::class, function() {
+           return new CommentServcice();
+        });
+
+        $this->app->alias(CommentServcice::class, 'comment');
+
     }
 
 

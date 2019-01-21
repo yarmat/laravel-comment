@@ -5,6 +5,7 @@ namespace Yarmat\Comment\Http\Controllers;
 use function foo\func;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
+use Yarmat\Comment\Http\Requests\CommentRequest;
 use Yarmat\Comment\Models\Comment;
 
 class CommentController extends Controller
@@ -18,72 +19,53 @@ class CommentController extends Controller
 
     public function get(Request $request)
     {
-        $parent = $request->get('parent');
-        $take = config('comment.limit');
-        $skip = $request->get('skip');
-        $order = $request->get('order');
-        $modelName = $request->get('model');
+        $modelName = \Comment::getModel($request->get('model'));
+
         $modelId = $request->get('model_id');
 
-        $query = $this->commentModelName::where('commentable_id', $modelId)
+        $parentId = $request->get('parent_id');
+
+        $page = $request->get('page');
+
+        $take = config('comment.limit');
+
+        $skip = ($page - 1) * $take;
+
+        $comments = $this->commentModelName::where('commentable_id', $modelId)
             ->where('commentable_type', $modelName)
-            ->where('parent_id', $parent)
-            ->with(['user.profile', 'descendants' => function ($query) use ($order) {
-                $query->with(['user.profile'])
-                    ->withCount('upLikes')
-                    ->withCount('downLikes');
-
-                switch ($order) {
-                    case 'likes':
-                        $query->orderBy('up_likes_count', 'DESC');
-                        break;
-                    case 'date-old':
-                        $query->orderBy('created_at', 'ASC');
-                        break;
-                    default:
-                        $query->orderBy('created_at', 'DESC');
-                }
-
-                if (\Auth::check()) $query->with('likeOfCurrentUser'); // If user Auth, join Active Like
+            ->where('parent_id', $parentId)
+            ->with(config('comment.comment_relations'))
+            ->with(['descendants' => function ($query) use ($request) {
+                $query->with(config('comment.comment_relations'))
+                    ->orderBy('created_at', $request->get('order'));
             }])
-            ->withCount('upLikes')
-            ->withCount('downLikes')
+            ->skip($skip)
             ->take($take)
-            ->skip($skip);
+            ->orderBy('created_at', $request->get('order'))
+            ->get();
 
-
-        if (\Auth::check()) $query->with('likeOfCurrentUser'); // If user Auth, join Active Like
-
-        switch ($order) {
-            case 'likes':
-                $query->orderBy('up_likes_count', 'DESC');
-                break;
-            case 'date-old':
-                $query->orderBy('created_at', 'ASC');
-                break;
-            default:
-                $query->orderBy('created_at', 'DESC');
-        }
-//        return $query->get();
-        $comments = $this->commentPrepare($this->prepareChildren($query->get()));
-
-        $nextCommentId = Comment::where('commentable_id', $id)
-            ->where('commentable_type', Content::class)
-            ->where('parent_id', $parent)
-            ->skip($skip + self::COMMENTS_LIMIT)
+        $nextComment = $this->commentModelName::where('commentable_id', $modelId)
+            ->where('commentable_type', $modelName)
+            ->where('parent_id', $parentId)
+            ->skip($skip + $take)
             ->first(['id']);
+
+        $commentsTree = $this->commentsToTree($comments);
 
         return response()->json([
             'success' => true,
-            'items' => $comments,
-            'isVisibleMoreButton' => !is_null($nextCommentId)
+            'message' => 'Comments is loaded',
+            'comments' => $this->transformTree($commentsTree),
+            'isVisibleMoreButton' => !is_null($nextComment)
         ]);
-
     }
 
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
-        $modelName = $request->get('model');
+        $this->saveAuthorToCookies($request->get('name'), $request->get('email'));
+
+        $modelName = \Comment::getModel($request->get('model'));
+
         $modelId = $request->get('model_id');
 
         $model = $modelName::whereId($modelId)->firstOrFail();
@@ -130,7 +112,7 @@ class CommentController extends Controller
 
     public function count(Request $request)
     {
-        $modelName = $request->get('model');
+        $modelName = \Comment::getModel($request->get('model'));
 
         $modelId = $request->get('model_id');
 
@@ -146,17 +128,41 @@ class CommentController extends Controller
 
     private function transformItem(Comment $item)
     {
-        return [
-            'id' => $item->id,
-            'message' => $item->message,
-            'isVisibleForm' => false,
-            'date' => Date::parse($item->created_at)->diffForHumans(),
-            'user' => [
-                'name' => $item->user->name,
-                'email' => $item->user->email
-            ],
-            'children' => []
-        ];
+        return config('comment.transformFunction')($item);
+    }
+
+    private function commentsToTree($comments)
+    {
+        foreach($comments as $key => $comment) {
+            $comments[$key]->children = $comment->descendants->toTree();
+        }
+
+        return $comments;
+    }
+
+    private function transformTree($items)
+    {
+        $transformItems = [];
+
+        foreach($items as $key => $item) {
+            $transformItems[$key] = $this->transformItem($item);
+            if(count($item->children) > 0 ) {
+                $transformItems[$key]['children'] = $this->transformTree($item->children);
+            };
+        }
+
+        return $transformItems;
+    }
+
+    private function saveAuthorToCookies($name, $email)
+    {
+        if(\Auth::check()) return false;
+
+        \Cookie::queue(\Cookie::make('author-comment', json_encode([
+            'name' => $name,
+            'email' => $email
+        ]), 60*60*24*1, '/'));
+
     }
 
 }

@@ -16,9 +16,15 @@ class CommentMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $modelName = $request->get('model');
+        $modelName = \Comment::getModel($request->get('model'));
+        $locale = $request->get('locale');
 
-        if(! is_null($modelName)) {
+        if(!is_null($locale)) {
+            \App::setLocale($locale);
+            \Date::setLocale($locale);
+        }
+
+        if($modelName) {
             $interfaces = class_implements($modelName);
 
             if (! isset($interfaces[CommentContract::class])) {
