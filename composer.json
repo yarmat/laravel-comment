@@ -4,7 +4,8 @@
     "version": "1.0",
     "keywords": [
         "laravel",
-        "comments"
+      "comments",
+      "vue"
     ],
     "type": "library",
     "license": "MIT",
@@ -16,7 +17,7 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "stable",
+  "minimum-stability": "dev",
     "require": {
         "php": ">=7.0",
         "kalnoy/nestedset": "^4.3",
@@ -28,6 +29,11 @@
             "Yarmat\\Comment\\": "src"
         }
     },
+  "autoload-dev": {
+    "psr-4": {
+      "Yarmat\\Comment\\Test\\": "tests"
+    }
+  },
     "extra": {
         "laravel": {
             "providers": [
@@ -37,5 +43,9 @@
                 "Comment": "Yarmat\\Comment\\Facades\\Comment"
             }
         }
+    },
+  "require-dev": {
+    "orchestra/testbench": "~3.0",
+    "phpunit/phpunit": "^7"
     }
 }
