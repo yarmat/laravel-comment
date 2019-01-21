@@ -9,6 +9,8 @@ use Kalnoy\Nestedset\NestedSetServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Yarmat\Comment\CommentServiceProvider;
 use Yarmat\Comment\Facades\Comment;
+use Yarmat\Comment\Test\Models\Blog;
+use Yarmat\Comment\Test\Models\User;
 
 class TestCase extends BaseTestCase
 {

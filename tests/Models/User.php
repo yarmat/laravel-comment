@@ -1,7 +1,6 @@
 <?php
 
-namespace Yarmat\Comment\Test;
-
+namespace Yarmat\Comment\Test\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Yarmat\Comment\Traits\CommenterTrait;

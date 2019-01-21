@@ -6,7 +6,7 @@ return [
     'default_order' => 'DESC',
 
     'models' => [
-        'user' => \Yarmat\Comment\Test\User::class,
+        'user' => \Yarmat\Comment\Test\Models\User::class,
         'comment' => \Yarmat\Comment\Models\Comment::class
     ],
 
@@ -28,7 +28,11 @@ return [
     ],
 
     'models_with_comments' => [
-        'Blog' => \Yarmat\Comment\Test\Blog::class
+
+        'Blog' => \Yarmat\Comment\Test\Models\Blog::class,
+
+        'News' => \Yarmat\Comment\Test\Models\News::class
+
     ],
 
 //    'comment_relations' => ['user' => function($query) {

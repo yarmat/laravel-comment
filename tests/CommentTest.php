@@ -9,7 +9,9 @@
 namespace Yarmat\Comment\Test;
 
 
+use Yarmat\Comment\Contracts\CommentContract;
 use Yarmat\Comment\Models\Comment;
+use Yarmat\Comment\Test\Models\Blog;
 
 class CommentTest extends TestCase
 {
@@ -137,6 +139,26 @@ class CommentTest extends TestCase
         $this->assertEquals($responseData['comment']['message'], $blog->comments[0]->message);
     }
 
+
+    public function test_store_to_model_without_contract()
+    {
+        $this->withoutExceptionHandling();
+        $response = $this->json('POST', route('comment.store'), [
+            'message' => $this->faker->realText(100),
+            'model' => 'News',
+            'model_id' => 1,
+            'parent_id' => 0
+        ]);
+
+        $response->assertStatus(500);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals($responseData['message'], 'Your model has not implement ' . CommentContract::class);
+
+    }
+
+
     public function test_delete()
     {
         $comment = (Blog::first())->saveComment([
@@ -175,4 +197,6 @@ class CommentTest extends TestCase
         $response->assertJsonStructure(['success', 'message']);
 
     }
+
+
 }
