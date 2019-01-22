@@ -207,10 +207,6 @@ Include to your View
 
 Include config to your View
 
-```php
-<?php
-    $post = Post::first();
-```
 ```html
  {!! \Comment::config('Post', $post->id) !!}
 ```
