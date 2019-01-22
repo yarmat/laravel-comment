@@ -3,7 +3,6 @@
 Route::group([
     'prefix' => config('comment.prefix'),
     'as' => 'comment.',
-//    'middleware' => ['web']
     'middleware' => ['web', 'comment']
 ], function() {
     Route::post('store', config('comment.controller') . '@store')->name('store')
