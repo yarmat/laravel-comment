@@ -23,8 +23,8 @@ class CommentServiceProvider extends ServiceProvider
         ], 'migrations');
 
         $this->publishes([
-            __DIR__.'/../resources/lang/en/comment.php' => resource_path('lang/en/comment.php'),
-            __DIR__.'/../resources/lang/ru/comment.php' => resource_path('lang/ru/comment.php'),
+            __DIR__ . '/../resources/lang/en/comment.php' => resource_path('lang/vendor/yarmat/laravel-comment/en/comment.php'),
+            __DIR__ . '/../resources/lang/ru/comment.php' => resource_path('lang/vendor/yarmat/laravel-comment/ru/comment.php'),
         ], 'translations');
 
         $this->publishes([
