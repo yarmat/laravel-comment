@@ -98,8 +98,12 @@
             },
             addItemToArray(parentId, item) {
                 if (parentId == 0) {
+                    if (this.items.length === 5) {
+                        console.log('oks');
+                        this.items.splice(this.items.length - 1, 1);
+                        this.isVisibleMoreButton = true;
+                    }
                     this.items.unshift(item);
-                    this.items.splice(this.items.length - 1, 1);
                 } else {
                     insertItem(this.items);
 

@@ -7,7 +7,8 @@ class CommentService
     {
         $authorComment = json_decode(\Cookie::get('author-comment'), true);
 
-        $lang = __('comment');
+        $lang = __('comment::comment');
+
         unset($lang['messages']);
 
         $config = [

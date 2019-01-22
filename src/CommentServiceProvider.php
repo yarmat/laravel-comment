@@ -22,10 +22,7 @@ class CommentServiceProvider extends ServiceProvider
             __DIR__ . '/../database/migrations/0000_00_00_000000_create_comments_table.php' => $this->getMigrationFileName('create_comments_table'),
         ], 'migrations');
 
-        $this->publishes([
-            __DIR__ . '/../resources/lang/en/comment.php' => resource_path('lang/vendor/yarmat/laravel-comment/en/comment.php'),
-            __DIR__ . '/../resources/lang/ru/comment.php' => resource_path('lang/vendor/yarmat/laravel-comment/ru/comment.php'),
-        ], 'translations');
+        $this->loadTranslations();
 
         $this->publishes([
             __DIR__ . '/../resources/js/components/comment' => resource_path('js/components/comment')
@@ -55,6 +52,22 @@ class CommentServiceProvider extends ServiceProvider
 
     }
 
+    private function loadTranslations()
+    {
+        $translationsPath = __DIR__ . '/../resources/lang';
+
+        $publishLangDir = resource_path('lang/vendor/laravel-comment');
+
+        if (is_dir($publishLangDir)) {
+            $this->loadTranslationsFrom($publishLangDir, 'comment');
+        } else {
+            $this->loadTranslationsFrom($translationsPath, 'comment');
+        }
+
+        $this->publishes([
+            $translationsPath => resource_path('lang/vendor/laravel-comment'),
+        ], 'translations');
+    }
 
     private function getMigrationFileName($name)
     {

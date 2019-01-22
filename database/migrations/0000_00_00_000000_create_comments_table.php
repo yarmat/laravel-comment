@@ -21,8 +21,9 @@ class CreateCommentsTable extends Migration
             $table->string('email')->nullable();
             $table->integer('commentable_id');
             $table->string('commentable_type');
-            $table->nestedSet();
+            $table->timestamp('approved_at')->nullable();
             $table->timestamps();
+            $table->nestedSet();
 
             $table->foreign('user_id')
                 ->references('id')

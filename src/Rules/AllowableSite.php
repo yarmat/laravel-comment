@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class AllowableSite implements Rule
 {
+    protected $site;
 
     public function passes($attribute, $value)
     {
@@ -17,7 +18,10 @@ class AllowableSite implements Rule
 
         foreach ($match[0] as $url) {
             $host = parse_url($url, PHP_URL_HOST);
-            if (!in_array($host, $allowableSites)) return false;
+            if (!in_array($host, $allowableSites)) {
+                $this->site = $host;
+                return false;
+            }
         }
 
         return true;
@@ -26,6 +30,8 @@ class AllowableSite implements Rule
 
     public function message()
     {
-        return __('comment.messages.validation.black_site');
+        return __('comment::comment.messages.validation.black_site', [
+            'site' => $this->site
+        ]);
     }
 }

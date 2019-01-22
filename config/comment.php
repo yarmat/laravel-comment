@@ -64,6 +64,7 @@ return [
             'message' => $item->message,
             'isVisibleForm' => false,
             'date' => \Date::parse($item->created_at)->diffForHumans(),
+            'is_approved' => $item->isApproved(),
             'user' => [
                 'name' => $item->user->name ?? $item->name,
                 'email' => $item->user->email ?? $item->email
@@ -76,5 +77,12 @@ return [
 
     'spam_list' => ['spam'],
 
-    'allowable_sites' => ['test.com', 'vk.com']
+    'allowable_sites' => ['test.com', 'vk.com'],
+
+    'approved' => [
+        'auth' => true,
+        'quest' => false
+    ]
+
+
 ];

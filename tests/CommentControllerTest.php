@@ -12,7 +12,7 @@ namespace Yarmat\Comment\Test;
 use Yarmat\Comment\Contracts\CommentContract;
 use Yarmat\Comment\Test\Models\Blog;
 
-class CommentTest extends TestCase
+class CommentControllerTest extends TestCase
 {
 
     public function test_count()
@@ -180,8 +180,6 @@ class CommentTest extends TestCase
         ]);
 
         $response->assertJsonValidationErrors(['message']);
-
-
     }
 
     public function test_store_with_spam_word()
@@ -200,9 +198,24 @@ class CommentTest extends TestCase
         $response->assertJsonValidationErrors(['message']);
     }
 
+    public function test_store_with_bad_site()
+    {
+        $blog = config('comment.models_with_comments.Blog')::first();
+
+        $response = $this->auth()->json('POST', route('comment.store'), [
+            'message' => 'http://bad.site',
+            'model' => 'Model',
+            'model_id' => $blog->id,
+            'parent_id' => 0
+        ]);
+
+        $response->assertJsonValidationErrors(['message']);
+    }
+
+
     public function test_store_to_model_without_contract()
     {
-        $this->withoutExceptionHandling();
+
         $response = $this->json('POST', route('comment.store'), [
             'message' => $this->faker->realText(100),
             'model' => 'News',
@@ -290,6 +303,22 @@ class CommentTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+    }
+
+    public function test_get()
+    {
+        $blog = config('comment.models_with_comments.Blog')::first();
+
+        $response = $this->json('POST', route('comment.get'), [
+            'page' => 1,
+            'model' => 'Blog',
+            'model_id' => $blog->id,
+            'parent_id' => null
+        ]);
+
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure(['success', 'message', 'comments']);
     }
 
 }

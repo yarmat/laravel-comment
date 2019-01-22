@@ -36,9 +36,11 @@ class CommentController extends Controller
             ->where('parent_id', $parentId)
             ->with(config('comment.comment_relations'))
             ->with(['descendants' => function ($query) use ($request) {
-                $query->with(config('comment.comment_relations'))
+                $query->approved()
+                    ->with(config('comment.comment_relations'))
                     ->orderBy('created_at', $request->get('order'));
             }])
+            ->approved()
             ->skip($skip)
             ->take($take)
             ->orderBy('created_at', $request->get('order'))
@@ -75,7 +77,8 @@ class CommentController extends Controller
             'parent_id' => $request->get('parent_id'),
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'user_id' => \Auth::user()->id ?? null
+            'user_id' => \Auth::user()->id ?? null,
+            'approved_at' => $this->approvedNowOrNull()
         ]);
 
         return response()->json([
@@ -163,6 +166,17 @@ class CommentController extends Controller
             'email' => $email
         ]), 60*60*24*1, '/'));
 
+    }
+
+    private function approvedNowOrNull()
+    {
+        if (\Auth::check()) {
+            if (config('comment.approved.auth')) return now();
+            if (\Auth::user()->isCommentApproved()) return now();
+        } else {
+            if (config('comment.approved.quest')) return now();
+        }
+        return null;
     }
 
 }

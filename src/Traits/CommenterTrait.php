@@ -15,4 +15,9 @@ trait CommenterTrait
     {
         return $this->hasMany(config('comment.models.comment'));
     }
+
+    public function isCommentApproved()
+    {
+        return true;
+    }
 }
