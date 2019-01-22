@@ -90,7 +90,7 @@ Add relations for you comments
 or
 
 ```php
-comment_relations' => ['user' => function($query) {
+'comment_relations' => ['user' => function($query) {
     $query->select(['id', 'name', 'email']);
 }, 'likes' => function($query){
     $query-> ...
