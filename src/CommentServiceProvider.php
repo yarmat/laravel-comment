@@ -47,11 +47,11 @@ class CommentServiceProvider extends ServiceProvider
             'comment'
         );
 
-        $this->app->singleton(CommentServcice::class, function() {
-           return new CommentServcice();
+        $this->app->singleton(CommentService::class, function () {
+            return new CommentService();
         });
 
-        $this->app->alias(CommentServcice::class, 'comment');
+        $this->app->alias(CommentService::class, 'comment');
 
     }
 

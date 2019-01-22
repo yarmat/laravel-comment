@@ -26,6 +26,6 @@ class AllowableSite implements Rule
 
     public function message()
     {
-        return __('comment.validation.black_site');
+        return __('comment.messages.validation.black_site');
     }
 }

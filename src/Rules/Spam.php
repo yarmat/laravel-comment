@@ -25,7 +25,7 @@ class Spam implements Rule
 
     public function message()
     {
-        return __('comment.validation.spam', [
+        return __('comment.messages.validation.spam', [
             'spam' => $this->spam
         ]);
     }

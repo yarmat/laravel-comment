@@ -1,11 +1,15 @@
 <?php
 namespace Yarmat\Comment;
 
-class CommentServcice {
+class CommentService
+{
     public function config($modelName, $modelId)
     {
         $authorComment = json_decode(\Cookie::get('author-comment'), true);
-        
+
+        $lang = __('comment');
+        unset($lang['messages']);
+
         $config = [
             'name' => is_array($authorComment) ?  $authorComment['name'] : '',
             'email' => is_array($authorComment) ?  $authorComment['email'] : '',
@@ -15,7 +19,7 @@ class CommentServcice {
             'model_id' => $modelId,
             'prefix' => config('comment.prefix'),
             'isUserLogged' => \Auth::check(),
-            'lang' => __('comment')
+            'lang' => $lang
         ];
 
         $script = '<script>';
@@ -34,13 +38,4 @@ class CommentServcice {
         return false;
     }
 
-    public function userModel()
-    {
-        return config('comment.models.user');
-    }
-
-    public function commentModel()
-    {
-        return config('comment.models.comment');
-    }
 }
