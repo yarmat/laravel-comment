@@ -1,7 +1,7 @@
 {
     "name": "yarmat/laravel-comment",
     "description": "Package for using comments with Vue in Laravel 5",
-    "version": "1.0",
+  "version": "1.0.1",
     "keywords": [
         "laravel",
       "comments",
