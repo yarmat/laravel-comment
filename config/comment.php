@@ -22,7 +22,7 @@ return [
 
         'get' => [],
 
-        'update' => [],
+        'update' => ['auth'],
 
         'count' => []
     ],
@@ -79,10 +79,8 @@ return [
 
     'allowable_sites' => ['test.com', 'vk.com'],
 
-    'approved' => [
-        'auth' => true,
-        'quest' => false
-    ]
+    'approved_quest' => false,
 
+    'seconds_to_edit_own_comment' => 60 * 5 // 5 minutes. Only for auth users
 
 ];

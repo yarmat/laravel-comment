@@ -54,12 +54,11 @@ class CommentController extends Controller
 
         $commentsTree = $this->commentsToTree($comments);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Comments is loaded',
+        return $this->responseSuccess('Comments are loaded', [
             'comments' => $this->transformTree($commentsTree),
             'isVisibleMoreButton' => !is_null($nextComment)
         ]);
+
     }
 
     public function store(CommentRequest $request)
@@ -81,9 +80,8 @@ class CommentController extends Controller
             'approved_at' => $this->approvedNowOrNull()
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Comment saved',
+
+        return $this->responseSuccess('Comment saved', [
             'comment' => $this->transformItem($comment)
         ]);
 
@@ -93,24 +91,22 @@ class CommentController extends Controller
     {
         $comment = $this->commentModelName::whereId($request->get('id'))->firstOrFail();
 
+        if (\Auth::user()->id != $comment->user_id) abort(403);
+
+        if (!$comment->isTimeToEdit()) return $this->responseError('Time to edit this comment is out', 403);
+
         $comment->update([
             'message' => $request->get('message')
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Comment is updated'
-        ]);
+        return $this->responseSuccess('Comment is updated');
     }
 
     public function destroy(Request $request)
     {
         $this->commentModelName::destroy($request->get('id'));
 
-        return response()->json([
-           'success' => true,
-           'message' => 'Comment is deleted'
-        ]);
+        return $this->responseSuccess('Comment is deleted');
     }
 
     public function count(Request $request)
@@ -123,8 +119,7 @@ class CommentController extends Controller
             ->where('commentable_type', $modelName)
             ->count();
 
-        return response()->json([
-            'success' => true,
+        return $this->responseSuccess('Comments are counted', [
             'count' => $commentCount
         ]);
     }
@@ -171,12 +166,31 @@ class CommentController extends Controller
     private function approvedNowOrNull()
     {
         if (\Auth::check()) {
-            if (config('comment.approved.auth')) return now();
             if (\Auth::user()->isCommentApproved()) return now();
         } else {
-            if (config('comment.approved.quest')) return now();
+            if (config('comment.approved_quest')) return now();
         }
         return null;
+    }
+
+    private function responseSuccess($message, array $array = [], $status = 200)
+    {
+        $responseArray = [
+            'success' => true,
+            'message' => $message
+        ];
+
+        $responseArray = array_merge($responseArray, $array);
+
+        return response()->json($responseArray, $status);
+    }
+
+    private function responseError($message, $status = 500)
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $message
+        ], $status);
     }
 
 }

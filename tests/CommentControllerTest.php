@@ -28,13 +28,12 @@ class CommentControllerTest extends TestCase
             'model_id' => $blog->id
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200);;
+        $response->assertJsonStructure(['success', 'count', 'message']);
 
-        $response->assertJsonStructure(['success', 'count']);
+        $responseData = json_decode($response->getContent(), true);
 
-        $data = json_decode($response->getContent(), true);
-
-        $this->assertEquals($data['count'], 1);
+        $this->assertEquals($responseData['count'], 1);
 
 
     }
@@ -252,15 +251,17 @@ class CommentControllerTest extends TestCase
 
     public function test_update()
     {
+        $user = config('comment.models.user')::first();
 
         $comment = (Blog::first())->saveComment([
             'name' => $this->faker->firstName,
             'email' => $this->faker->email,
             'message' => $this->faker->realText(100),
+            'user_id' => $user->id,
             'parent_id' => 0
         ]);
 
-        $response = $this->post(route('comment.update'), [
+        $response = $this->auth()->post(route('comment.update'), [
             'id' => $comment->id,
             'message' => $this->faker->realText(100)
         ]);

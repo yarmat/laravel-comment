@@ -1,6 +1,7 @@
 <?php
 namespace Yarmat\Comment\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -45,6 +46,15 @@ class Comment extends Model
     public function isApproved()
     {
         return $this->approved_at !== null;
+    }
+
+    public function isTimeToEdit()
+    {
+
+        $timeLeft = $this->created_at
+            ->addSeconds(config('comment.seconds_to_edit_own_comment'));
+
+        return now() < $timeLeft;
     }
 
 }
