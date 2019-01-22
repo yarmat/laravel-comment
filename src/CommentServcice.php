@@ -33,4 +33,14 @@ class CommentServcice {
 
         return false;
     }
+
+    public function userModel()
+    {
+        return config('comment.models.user');
+    }
+
+    public function commentModel()
+    {
+        return config('comment.models.comment');
+    }
 }

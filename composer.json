@@ -1,51 +1,51 @@
 {
-    "name": "yarmat/laravel-comment",
-    "description": "Package for using comments with Vue in Laravel 5",
+  "name": "yarmat/laravel-comment",
+  "description": "Package for using comments with Vue in Laravel 5",
   "version": "1.0.0",
-    "keywords": [
-        "laravel",
-      "comments",
-      "vue"
-    ],
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Yarmat",
-            "email": "yarmatua@gmail.com",
-            "homepage": "https://yarmat.su",
-            "role": "Developer"
-        }
-    ],
+  "keywords": [
+    "laravel",
+    "comments",
+    "vue"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yarmat",
+      "email": "yarmatua@gmail.com",
+      "homepage": "https://yarmat.su",
+      "role": "Developer"
+    }
+  ],
   "minimum-stability": "dev",
-    "require": {
-        "php": ">=7.0",
-        "kalnoy/nestedset": "^4.3",
-        "jenssegers/date": "^3.4",
-        "genealabs/laravel-model-caching": "^0.3.6"
-    },
-    "autoload": {
-        "psr-4": {
-            "Yarmat\\Comment\\": "src"
-        }
-    },
+  "require": {
+    "php": ">=7.0",
+    "kalnoy/nestedset": "^4.3",
+    "jenssegers/date": "^3.4",
+    "genealabs/laravel-model-caching": "^0.3.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yarmat\\Comment\\": "src"
+    }
+  },
   "autoload-dev": {
     "psr-4": {
       "Yarmat\\Comment\\Test\\": "tests"
     }
   },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Yarmat\\Comment\\CommentServiceProvider"
-            ],
-            "aliases": {
-                "Comment": "Yarmat\\Comment\\Facades\\Comment"
-            }
-        }
-    },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Yarmat\\Comment\\CommentServiceProvider"
+      ],
+      "aliases": {
+        "Comment": "Yarmat\\Comment\\Facades\\Comment"
+      }
+    }
+  },
   "require-dev": {
     "orchestra/testbench": "~3.0",
     "phpunit/phpunit": "^7"
-    }
+  }
 }

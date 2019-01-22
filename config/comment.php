@@ -47,12 +47,12 @@ return [
     // Validation
     'validation' => [
         'auth' => [
-            'message' => 'required|string'
+            'message' => ['required', 'string', new \Yarmat\Comment\Rules\Spam(), new \Yarmat\Comment\Rules\AllowableSite()]
         ],
         'not_auth' => [
             'name' => 'required|alpha',
             'email' => 'required|email',
-            'message' => 'required|string'
+            'message' => ['required', 'string', new \Yarmat\Comment\Rules\Spam(), new \Yarmat\Comment\Rules\AllowableSite()]
         ],
         'messages' => []
     ],
@@ -72,5 +72,9 @@ return [
         ];
     },
 
-    'allowable_tags' => ''
+    'allowable_tags' => '',
+
+    'spam_list' => ['spam'],
+
+    'allowable_sites' => ['test.com', 'vk.com']
 ];

@@ -3,6 +3,7 @@
 namespace Yarmat\Comment\Test;
 
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Translation\TranslationServiceProvider;
 use Jenssegers\Date\Date;
 use Jenssegers\Date\DateServiceProvider;
 use Kalnoy\Nestedset\NestedSetServiceProvider;

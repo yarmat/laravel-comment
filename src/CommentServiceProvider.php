@@ -32,6 +32,7 @@ class CommentServiceProvider extends ServiceProvider
         ], 'vue-components');
 
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
     }
 
     /**
@@ -45,7 +46,6 @@ class CommentServiceProvider extends ServiceProvider
             __DIR__ . '/../config/comment.php',
             'comment'
         );
-
 
         $this->app->singleton(CommentServcice::class, function() {
            return new CommentServcice();

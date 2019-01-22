@@ -10,7 +10,6 @@ namespace Yarmat\Comment\Test;
 
 
 use Yarmat\Comment\Contracts\CommentContract;
-use Yarmat\Comment\Models\Comment;
 use Yarmat\Comment\Test\Models\Blog;
 
 class CommentTest extends TestCase
@@ -65,6 +64,36 @@ class CommentTest extends TestCase
 
         $this->assertEquals($responseData['comment']['message'], $blog->comments[0]->message);
 
+    }
+
+    public function test_store_as_children()
+    {
+        $blogModel = \Comment::getModel('Blog');
+
+        $blog = $blogModel::first();
+
+        $comment = $blog->saveComment([
+            'name' => $this->faker->firstName,
+            'email' => $this->faker->email,
+            'message' => $this->faker->realText(100)
+        ]);
+
+        $response = $this->json('POST', route('comment.store'), [
+            'name' => $this->faker->firstName,
+            'email' => $this->faker->email,
+            'message' => $this->faker->realText(100),
+            'model' => 'Blog',
+            'model_id' => $blog->id,
+            'parent_id' => $comment->id
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $commentNew = config('comment.models.comment')::whereId($responseData['comment']['id'])->first();
+
+        $this->assertTrue($comment->isRoot());
+
+        $this->assertTrue($commentNew->isChildOf($comment));
     }
 
     public function test_store_with_invalid_values()
@@ -139,6 +168,37 @@ class CommentTest extends TestCase
         $this->assertEquals($responseData['comment']['message'], $blog->comments[0]->message);
     }
 
+    public function test_store_auth_with_spam_word()
+    {
+        $blog = Blog::first();
+
+        $response = $this->auth()->json('POST', route('comment.store'), [
+            'message' => 'spam is my life',
+            'model' => 'Blog',
+            'model_id' => $blog->id,
+            'parent_id' => 0
+        ]);
+
+        $response->assertJsonValidationErrors(['message']);
+
+
+    }
+
+    public function test_store_with_spam_word()
+    {
+        $blog = Blog::first();
+
+        $response = $this->json('POST', route('comment.store'), [
+            'name' => $this->faker->firstName,
+            'email' => $this->faker->email,
+            'message' => 'spam is my life',
+            'model' => 'Blog',
+            'model_id' => $blog->id,
+            'parent_id' => 0
+        ]);
+
+        $response->assertJsonValidationErrors(['message']);
+    }
 
     public function test_store_to_model_without_contract()
     {
@@ -198,5 +258,38 @@ class CommentTest extends TestCase
 
     }
 
+    public function test_allowable_sites()
+    {
+        $blog = Blog::first();
+
+        $response = $this->json('POST', route('comment.store'), [
+            'name' => $this->faker->firstName,
+            'email' => $this->faker->email,
+            'message' => $this->faker->url,
+            'model' => 'Blog',
+            'model_id' => $blog->id,
+            'parent_id' => 0
+        ]);
+
+        $response->assertJsonValidationErrors(['message']);
+
+        $response = $this->auth()->json('POST', route('comment.store'), [
+            'message' => $this->faker->url,
+            'model' => 'Blog',
+            'model_id' => $blog->id,
+            'parent_id' => 0
+        ]);
+
+        $response->assertJsonValidationErrors(['message']);
+
+        $response = $this->auth()->json('POST', route('comment.store'), [
+            'message' => 'https://vk.com',
+            'model' => 'Blog',
+            'model_id' => $blog->id,
+            'parent_id' => 0
+        ]);
+
+        $response->assertStatus(200);
+    }
 
 }
