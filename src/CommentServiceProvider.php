@@ -4,6 +4,7 @@ namespace Yarmat\Comment;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Yarmat\Comment\Console\Commands\ApproveComments;
 use Yarmat\Comment\Console\Commands\ClearComments;
 
 class CommentServiceProvider extends ServiceProvider
@@ -33,7 +34,8 @@ class CommentServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                ClearComments::class
+                ClearComments::class,
+                ApproveComments::class
             ]);
         }
 

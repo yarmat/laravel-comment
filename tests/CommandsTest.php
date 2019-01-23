@@ -19,4 +19,17 @@ class CommandsTest extends TestCase
 
         $this->assertTrue(is_null($this->firstComment()));
     }
+
+    public function test_approve_all()
+    {
+        $comment = $this->saveCommentToFirstBlog();
+
+        $this->assertFalse($comment->isApproved());
+
+        $this->artisan('comment:approve');
+
+        $comment = $this->firstComment();
+
+        $this->assertTrue($comment->isApproved());
+    }
 }
