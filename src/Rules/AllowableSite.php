@@ -30,7 +30,7 @@ class AllowableSite implements Rule
 
     public function message()
     {
-        return __('comment::comment.messages.validation.black_site', [
+        return __('comment::comment.validation.black_site', [
             'site' => $this->site
         ]);
     }

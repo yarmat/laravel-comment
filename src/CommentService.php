@@ -9,7 +9,7 @@ class CommentService
 
         $lang = __('comment::comment');
 
-        unset($lang['messages']);
+        unset($lang['validation']);
 
         $config = [
             'name' => is_array($authorComment) ?  $authorComment['name'] : '',
