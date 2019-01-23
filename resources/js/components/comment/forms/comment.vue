@@ -21,12 +21,13 @@
 <script>
     import RouteMixin from './../mixins/route';
     import ConfigMixin from './../mixins/config';
+    import ErrorMixin from './../mixins/error';
     import bus from './../bus';
 
     export default {
         name: "CommentForm",
         props: ['parent-id'],
-        mixins: [RouteMixin, ConfigMixin],
+        mixins: [RouteMixin, ConfigMixin, ErrorMixin],
         data() {
             return {
                 message: ''
@@ -51,8 +52,6 @@
                             item: response.data.comment
                         });
 
-                        bus.$emit('up-count', 1);
-
                         this.updateConfigAuthor(this.name, this.email);
                     }
                 }).catch(error => {
@@ -62,14 +61,6 @@
                     if (error.response.status === 429) this.showErrorOfTooManyAttempts();
                 });
 
-            },
-            showErrorsOfValidation(errors) {
-                for (let key in errors) {
-                    return alert(errors[key][0]);
-                }
-            },
-            showErrorOfTooManyAttempts() {
-                alert(this.lang.dont_spam);
             }
         }
     }

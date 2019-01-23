@@ -18,7 +18,7 @@
             </div>
 
 
-            <comment-tree :items="items" depth="0"></comment-tree>
+            <comment-item :items="items" depth="0"></comment-item>
 
             <button class="btn btn-success" style="width: 100%" v-if="isVisibleMoreButton" @click="getItems()">{{
                 lang.buttons.show_more }}
@@ -30,16 +30,17 @@
 
 <script>
     import CommentForm from './forms/comment';
-    import CommentTree from './tree';
+    import CommentItem from './CommentItem';
     import RouteMixin from './mixins/route';
     import ConfigMixin from './mixins/config';
+    import ErrorMixin from './mixins/error';
     import bus from './bus';
 
 
     export default {
         name: "CommentComponent",
-        components: {CommentForm, CommentTree},
-        mixins: [RouteMixin, ConfigMixin],
+        components: {CommentForm, CommentItem},
+        mixins: [RouteMixin, ConfigMixin, ErrorMixin],
         data() {
             return {
                 items: [],
@@ -52,8 +53,6 @@
             bus.$on('add-item', (values) => {
                 this.addItemToArray(values.parentId, values.item);
             });
-
-            bus.$on('up-count', (count) => this.itemsCount = this.itemsCount + count);
         },
         mounted() {
             this.getItemsCount();
@@ -97,8 +96,12 @@
                 this.getItems();
             },
             addItemToArray(parentId, item) {
+                if (!item.is_approved) return this.showNotApprovedError();
+
+                this.itemsCount = this.itemsCount + 1;
+
                 if (parentId == 0) {
-                    if (this.items.length === 5) {
+                    if (this.items.length == this.limit) {
                         console.log('oks');
                         this.items.splice(this.items.length - 1, 1);
                         this.isVisibleMoreButton = true;

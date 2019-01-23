@@ -10,7 +10,8 @@
                 modelId: '',
                 model: '',
                 isUserLogged: false,
-                lang: ''
+                lang: '',
+                limit: 0
             }
         },
         created() {
@@ -23,6 +24,7 @@
             this.modelId = window.Comment.model_id;
             this.isUserLogged = window.Comment.isUserLogged;
             this.lang = window.Comment.lang;
+            this.limit = window.Comment.limit;
         },
         methods: {
             updateConfigAuthor(name, email) {
