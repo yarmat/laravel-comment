@@ -5,6 +5,7 @@ namespace Yarmat\Comment\Http\Controllers;
 use function foo\func;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
+use Yarmat\Comment\Events\DeleteComment;
 use Yarmat\Comment\Events\StoreComment;
 use Yarmat\Comment\Events\UpdateComment;
 use Yarmat\Comment\Http\Requests\CommentRequest;
@@ -106,7 +107,11 @@ class CommentController extends Controller
 
     public function destroy(Request $request)
     {
-        $this->commentModelName::destroy($request->get('id'));
+        $comment = $this->commentModelName::whereId($request->get('id'))->firstOrFail();
+
+        $comment->delete();
+
+        event(new DeleteComment($comment));
 
         return $this->responseSuccess('Comment is deleted');
     }

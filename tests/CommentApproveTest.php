@@ -13,11 +13,7 @@ class CommentApproveTest extends TestCase
 {
     public function test_approve()
     {
-        $blog = $this->firstBlog();
-
-        $comment = $blog->saveComment([
-            'message' => $this->faker->realText(100)
-        ]);
+        $comment = $this->saveCommentToFirstBlog();
 
         $this->assertFalse($comment->isApproved());
 
@@ -29,11 +25,7 @@ class CommentApproveTest extends TestCase
 
     public function test_un_approve()
     {
-        $blog = $this->firstBlog();
-
-        $comment = $blog->saveComment([
-            'message' => $this->faker->realText(100)
-        ]);
+        $comment = $this->saveCommentToFirstBlog();
 
         $comment->approve();
 

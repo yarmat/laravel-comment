@@ -4,6 +4,7 @@ namespace Yarmat\Comment;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Yarmat\Comment\Console\Commands\ClearComments;
 
 class CommentServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,12 @@ class CommentServiceProvider extends ServiceProvider
         ], 'vue-components');
 
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ClearComments::class
+            ]);
+        }
 
     }
 

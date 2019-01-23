@@ -99,5 +99,24 @@ class TestCase extends BaseTestCase
         return config('comment.models.user')::first();
     }
 
+    protected function firstComment()
+    {
+        return config('comment.models.comment')::first();
+    }
+
+    protected function saveCommentToFirstBlog()
+    {
+        $blog = $this->firstBlog();
+
+        $user = $this->firstUser();
+
+        return $blog->saveComment([
+            'name' => $this->faker->firstName,
+            'email' => $this->faker->email,
+            'message' => $this->faker->realText(100),
+            'parent_id' => 0,
+            'user_id' => $user->id
+        ]);
+    }
 
 }
