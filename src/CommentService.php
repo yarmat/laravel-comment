@@ -20,7 +20,8 @@ class CommentService
             'model_id' => $modelId,
             'prefix' => config('comment.prefix'),
             'isUserLogged' => \Auth::check(),
-            'lang' => $lang
+            'lang' => $lang,
+            'limit' => config('comment.limit')
         ];
 
         $script = '<script>';

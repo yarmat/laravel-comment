@@ -26,6 +26,7 @@ class CommentServiceTest extends TestCase
         $this->assertTrue(strpos($config, 'prefix') != false);
         $this->assertTrue(strpos($config, 'model') != false);
         $this->assertTrue(strpos($config, 'model_id') != false);
+        $this->assertTrue(strpos($config, 'limit') != false);
     }
 
     public function test_get_model()
