@@ -5,6 +5,8 @@ namespace Yarmat\Comment\Http\Controllers;
 use function foo\func;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
+use Yarmat\Comment\Events\StoreComment;
+use Yarmat\Comment\Events\UpdateComment;
 use Yarmat\Comment\Http\Requests\CommentRequest;
 use Yarmat\Comment\Models\Comment;
 
@@ -81,6 +83,7 @@ class CommentController extends Controller
             'approved_at' => $this->approvedNowOrNull()
         ]);
 
+        event(new StoreComment($comment));
 
         return $this->responseSuccess('Comment saved', [
             'comment' => $this->transformItem($comment)
@@ -91,6 +94,8 @@ class CommentController extends Controller
     public function update(Request $request)
     {
         $comment = $this->commentModelName::whereId($request->get('id'))->firstOrFail();
+
+        event(new UpdateComment($comment));
 
         $comment->update([
             'message' => $request->get('message')

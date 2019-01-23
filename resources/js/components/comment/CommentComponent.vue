@@ -57,7 +57,6 @@
         mounted() {
             this.getItemsCount();
             this.getItems();
-            console.log(this.lang);
         },
         methods: {
             getItemsCount() {
@@ -102,7 +101,6 @@
 
                 if (parentId == 0) {
                     if (this.items.length == this.limit) {
-                        console.log('oks');
                         this.items.splice(this.items.length - 1, 1);
                         this.isVisibleMoreButton = true;
                     }

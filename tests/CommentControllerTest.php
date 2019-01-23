@@ -18,7 +18,8 @@ class CommentControllerTest extends TestCase
         $blog = $this->firstBlog();
 
         $blog->saveComment([
-            'message' => $this->faker->realText(400)
+            'message' => $this->faker->realText(400),
+            'approved_at' => now()
         ]);
 
         $response = $this->post(route('comment.count'), [
