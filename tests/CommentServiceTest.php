@@ -13,7 +13,7 @@ class CommentServiceTest extends TestCase
 {
     public function test_config()
     {
-        $blog = config('comment.models_with_comments.Blog')::first();
+        $blog = $this->firstBlog();
 
         $config = \Comment::config('Blog', $blog->id);
 

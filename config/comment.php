@@ -69,7 +69,7 @@ return [
                 'name' => $item->user->name ?? $item->name,
                 'email' => $item->user->email ?? $item->email
             ],
-            'children' => []
+            'children' => [] // default must be empty array
         ];
     },
 

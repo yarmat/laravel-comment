@@ -8,16 +8,14 @@
 
 namespace Yarmat\Comment\Test;
 
-
 use Yarmat\Comment\Contracts\CommentContract;
-use Yarmat\Comment\Test\Models\Blog;
 
 class CommentControllerTest extends TestCase
 {
 
     public function test_count()
     {
-        $blog = Blog::first();
+        $blog = $this->firstBlog();
 
         $blog->saveComment([
             'message' => $this->faker->realText(400)
@@ -40,7 +38,7 @@ class CommentControllerTest extends TestCase
 
     public function test_store()
     {
-        $blog = Blog::first();
+        $blog = $this->firstBlog();
 
         $response = $this->post(route('comment.store'), [
             'name' => $this->faker->firstName,
@@ -97,7 +95,7 @@ class CommentControllerTest extends TestCase
 
     public function test_store_with_invalid_values()
     {
-        $blog = Blog::first();
+        $blog = $this->firstBlog();
 
         $response = $this->json('POST', route('comment.store'), [
             'name' => '',
@@ -145,7 +143,7 @@ class CommentControllerTest extends TestCase
 
     public function test_store_auth()
     {
-        $blog = Blog::first();
+        $blog = $this->firstBlog();
 
         $response = $this->auth()->post(route('comment.store'), [
             'message' => $this->faker->realText(100),
@@ -169,7 +167,7 @@ class CommentControllerTest extends TestCase
 
     public function test_store_auth_with_spam_word()
     {
-        $blog = Blog::first();
+        $blog = $this->firstBlog();
 
         $response = $this->auth()->json('POST', route('comment.store'), [
             'message' => 'spam is my life',
@@ -183,7 +181,7 @@ class CommentControllerTest extends TestCase
 
     public function test_store_with_spam_word()
     {
-        $blog = Blog::first();
+        $blog = $this->firstBlog();
 
         $response = $this->json('POST', route('comment.store'), [
             'name' => $this->faker->firstName,
@@ -233,7 +231,9 @@ class CommentControllerTest extends TestCase
 
     public function test_delete()
     {
-        $comment = (Blog::first())->saveComment([
+        $blog = $this->firstBlog();
+
+        $comment = $blog->saveComment([
             'name' => $this->faker->firstName,
             'email' => $this->faker->email,
             'message' => $this->faker->realText(100),
@@ -251,9 +251,11 @@ class CommentControllerTest extends TestCase
 
     public function test_update()
     {
-        $user = config('comment.models.user')::first();
+        $user = $this->firstUser();
 
-        $comment = (Blog::first())->saveComment([
+        $blog = $this->firstBlog();
+
+        $comment = $blog->saveComment([
             'name' => $this->faker->firstName,
             'email' => $this->faker->email,
             'message' => $this->faker->realText(100),
@@ -274,7 +276,7 @@ class CommentControllerTest extends TestCase
 
     public function test_allowable_sites()
     {
-        $blog = Blog::first();
+        $blog = $this->firstBlog();
 
         $response = $this->json('POST', route('comment.store'), [
             'name' => $this->faker->firstName,
@@ -308,7 +310,7 @@ class CommentControllerTest extends TestCase
 
     public function test_get()
     {
-        $blog = config('comment.models_with_comments.Blog')::first();
+        $blog = $this->firstBlog();
 
         $response = $this->json('POST', route('comment.get'), [
             'page' => 1,

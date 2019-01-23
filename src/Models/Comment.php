@@ -48,7 +48,7 @@ class Comment extends Model
         return $this->approved_at !== null;
     }
 
-    public function isTimeToEdit()
+    public function isTimeToUpdate()
     {
 
         $timeLeft = $this->created_at

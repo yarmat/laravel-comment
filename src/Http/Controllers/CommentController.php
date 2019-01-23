@@ -91,10 +91,6 @@ class CommentController extends Controller
     {
         $comment = $this->commentModelName::whereId($request->get('id'))->firstOrFail();
 
-        if (\Auth::user()->id != $comment->user_id) abort(403);
-
-        if (!$comment->isTimeToEdit()) return $this->responseError('Time to edit this comment is out', 403);
-
         $comment->update([
             'message' => $request->get('message')
         ]);

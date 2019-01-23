@@ -13,7 +13,7 @@ class CommentApproveTest extends TestCase
 {
     public function test_approve()
     {
-        $blog = config('comment.models_with_comments.Blog')::first();
+        $blog = $this->firstBlog();
 
         $comment = $blog->saveComment([
             'message' => $this->faker->realText(100)
@@ -29,7 +29,7 @@ class CommentApproveTest extends TestCase
 
     public function test_un_approve()
     {
-        $blog = config('comment.models_with_comments.Blog')::first();
+        $blog = $this->firstBlog();
 
         $comment = $blog->saveComment([
             'message' => $this->faker->realText(100)
@@ -47,7 +47,7 @@ class CommentApproveTest extends TestCase
 
     public function test_store()
     {
-        $blog = config('comment.models_with_comments.Blog')::first();
+        $blog = $this->firstBlog();
 
         $response = $this->json('POST', route('comment.store'), [
             'name' => $this->faker->firstName,
@@ -67,7 +67,7 @@ class CommentApproveTest extends TestCase
 
     public function test_store_auth()
     {
-        $blog = config('comment.models_with_comments.Blog')::first();
+        $blog = $this->firstBlog();
 
         $response = $this->auth()->json('POST', route('comment.store'), [
             'name' => $this->faker->firstName,

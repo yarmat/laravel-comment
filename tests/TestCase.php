@@ -89,4 +89,15 @@ class TestCase extends BaseTestCase
         return $this->actingAs($user);
     }
 
+    protected function firstBlog()
+    {
+        return config('comment.models_with_comments.Blog')::first();
+    }
+
+    protected function firstUser()
+    {
+        return config('comment.models.user')::first();
+    }
+
+
 }
