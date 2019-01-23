@@ -50,6 +50,7 @@ class CommentController extends Controller
             ->where('commentable_type', $modelName)
             ->where('parent_id', $parentId)
             ->skip($skip + $take)
+            ->approved()
             ->first(['id']);
 
         $commentsTree = $this->commentsToTree($comments);
@@ -113,6 +114,7 @@ class CommentController extends Controller
 
         $commentCount =  $this->commentModelName::where('commentable_id', $modelId)
             ->where('commentable_type', $modelName)
+            ->approved()
             ->count();
 
         return $this->responseSuccess('Comments are counted', [
