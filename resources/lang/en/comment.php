@@ -11,6 +11,11 @@ return [
         'newest' => 'Newest',
         'oldest' => 'Oldest'
     ],
+    'labels' => [
+        'name' => 'Name',
+        'email' => 'E-mail',
+        'message' => 'Message',
+    ],
     'messages' => [
         'not_approved' => 'Your comment will be published after it is checked.',
         'dont_spam' => 'Do not spam!'
